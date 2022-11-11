@@ -1,0 +1,2 @@
+main.py --model-name=VitZoomNet --config=configs/zoomnet/cod_vitzoomnet.py --datasets-info ./configs/_base_/dataset/dataset_configs.json
+main.py --model-name=ZoomNet --config=configs/zoomnet/cod_zoomnet.py --datasets-info ./configs/_base_/dataset/dataset_configs.json
