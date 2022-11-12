@@ -61,11 +61,11 @@ def customized_worker_init_fn(worker_id, base_seed):
 def set_seed_for_lib(seed):
     random.seed(seed)
     np.random.seed(seed)
-    # 为了禁止hash随机化，使得实验可复现。
+
     os.environ["PYTHONHASHSEED"] = str(seed)
-    torch.manual_seed(seed)  # 为CPU设置随机种子
-    torch.cuda.manual_seed(seed)  # 为当前GPU设置随机种子
-    torch.cuda.manual_seed_all(seed)  # 为所有GPU设置随机种子
+    torch.manual_seed(seed)  
+    torch.cuda.manual_seed(seed)  
+    torch.cuda.manual_seed_all(seed)  
 
 
 def initialize_seed_cudnn(seed, deterministic):
@@ -145,7 +145,7 @@ def construct_exp_name(model_name: str, cfg: dict):
             if _i == 0:
                 _i = "false"
         elif isinstance(_i, (list, tuple)):
-            _i = "" if _i else "false"  # 只是判断是否非空
+            _i = "" if _i else "false"  
         elif isinstance(_i, str):
             if "_" in _i:
                 _i = _i.replace("_", "").lower()
@@ -210,12 +210,8 @@ def to_device(data, device):
 
 
 def is_on_gpu(x):
-    """
-    判定x是否是gpu上的实例，可以检测tensor和module
-    :param x: (torch.Tensor, nn.Module)目标对象
-    :return: 是否在gpu上
-    """
-    # https://blog.csdn.net/WYXHAHAHA123/article/details/86596981
+
+ 
     if isinstance(x, torch.Tensor):
         return "cuda" in x.device
     elif isinstance(x, nn.Module):
@@ -230,12 +226,7 @@ def is_parallel(model):
 
 
 def get_device(x):
-    """
-    返回x的设备信息，可以处理tensor和module
-    :param x: (torch.Tensor, nn.Module) 目标对象
-    :return: 所在设备
-    """
-    # https://blog.csdn.net/WYXHAHAHA123/article/details/86596981
+   
     if isinstance(x, torch.Tensor):
         return x.device
     elif isinstance(x, nn.Module):
@@ -245,12 +236,11 @@ def get_device(x):
 
 
 def pre_mkdir(path_config):
-    # 提前创建好记录文件，避免自动创建的时候触发文件创建事件
+
     check_mkdir(path_config["pth_log"])
     make_log(path_config["te_log"], f"=== te_log {datetime.now()} ===")
     make_log(path_config["tr_log"], f"=== tr_log {datetime.now()} ===")
 
-    # 提前创建好存储预测结果和存放模型的文件夹
     check_mkdir(path_config["save"])
     check_mkdir(path_config["pth"])
 
@@ -276,32 +266,21 @@ def make_log(path, context):
 
 
 def are_the_same(file_path_1, file_path_2, buffer_size=8 * 1024):
-    """
-    通过逐块比较两个文件的二进制数据是否一致来确定两个文件是否是相同内容
-
-    REF: https://zhuanlan.zhihu.com/p/142453128
-
-    Args:
-        file_path_1: 文件路径
-        file_path_2: 文件路径
-        buffer_size: 读取的数据片段大小，默认值8*1024
-
-    Returns: dict(state=True/False, msg=message)
-    """
+   
     st1 = os.stat(file_path_1)
     st2 = os.stat(file_path_2)
 
-    # 比较文件大小
+ 
     if st1.st_size != st2.st_size:
-        return dict(state=False, msg="文件大小不一致")
+        return dict(state=False, msg="")
 
     with open(file_path_1, mode="rb") as f1, open(file_path_2, mode="rb") as f2:
         while True:
-            b1 = f1.read(buffer_size)  # 读取指定大小的数据进行比较
+            b1 = f1.read(buffer_size)  
             b2 = f2.read(buffer_size)
             if b1 != b2:
                 msg = (
-                    f"存在差异:"
+                    f":"
                     f"\n{file_path_1}\n==>\n{b1.decode('utf-8')}\n<=="
                     f"\n{file_path_2}\n==>\n{b2.decode('utf-8')}\n<=="
                 )
@@ -309,11 +288,11 @@ def are_the_same(file_path_1, file_path_2, buffer_size=8 * 1024):
             # b1 == b2
             if not b1:
                 # b1 == b2 == False (b'')
-                return dict(state=True, msg="完全一样")
+                return dict(state=True, msg="")
 
 
 def all_items_in_string(items, target_str):
-    """判断items中是否全部都是属于target_str一部分的项"""
+
     for i in items:
         if i not in target_str:
             return False
@@ -321,7 +300,7 @@ def all_items_in_string(items, target_str):
 
 
 def any_item_in_string(items, target_str):
-    """判断items中是否存在属于target_str一部分的项"""
+
     for i in items:
         if i in target_str:
             return True
@@ -336,35 +315,12 @@ def slide_win_select(items, win_size=1, win_stride=1, drop_last=False):
         i += win_stride
 
     if not drop_last:
-        # 对于最后不满一个win_size的切片，保留
+    
         yield items[i: i + win_size]
 
 
 def iterate_nested_sequence(nested_sequence):
-    """
-    当前支持list/tuple/int/float/range()的多层嵌套，注意不要嵌套的太深，小心超出python默认的最大递归深度
-
-    例子
-    ::
-
-        for x in iterate_nested_sequence([[1, (2, 3)], range(3, 10), 0]):
-            print(x)
-
-        1
-        2
-        3
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        0
-
-    :param nested_sequence: 多层嵌套的序列
-    :return: generator
-    """
+    
     for item in nested_sequence:
         if isinstance(item, (int, float)):
             yield item
