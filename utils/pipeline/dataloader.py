@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2021/5/29
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
 
 from functools import partial
 
