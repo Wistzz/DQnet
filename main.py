@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 import argparse
 import json
@@ -117,7 +117,7 @@ def test_once(
             if clip_range is not None:
                 pred = ops.clip_to_normalize(pred, clip_range=clip_range)
 
-            if save_path:  # 这里的save_path包含了数据集名字
+            if save_path:  
                 ops.save_array_as_image(
                     data_array=pred, save_name=os.path.basename(mask_path), save_dir=save_path, to_minmax=to_minmax
                 )
