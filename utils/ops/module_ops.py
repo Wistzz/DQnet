@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2021/5/17
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
-from typing import Callable
 
+from typing import Callable
 import torch
 
 
