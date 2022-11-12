@@ -14,9 +14,9 @@ well with underlying camouflaged objects.
 
 ## Model 
 
-The model used pretrained weights for ResNet50 and MAE. They can be found at:
-- Resnet50: https://pan.baidu.com/s/1zpdmJ22CXK0QQzARLPbmnw (n7cq)
-- MAE: https://pan.baidu.com/s/10S9LEcdcoLjuSTCf_ffENg (a9ah)
+The model used pretrained weights for ResNet50 and ViT. They can be found at:
+- Resnet50
+- ViT
 
 
 
@@ -27,7 +27,7 @@ First clone the repository locally:
 git clone https://github.com/CVPR23/DQnet.git
 ```
 
-Second download the weights for ResNet50 and MAE.
+Second download the weights for ResNet50 and ViT.
 
 Some core dependencies:
 
@@ -39,10 +39,10 @@ More details can be found in <./requirements.txt>
 
 ### Datasets
 More details can be found at:
-- COD Datasets: <https://pan.baidu.com/s/19fYel3STGb5lg27xbQriOA> (gqrg)
-- CAMO Datasets: <https://sites.google.com/view/ltnghia/research/camo>
-- NC4K Datasets: <https://pan.baidu.com/s/1Mq-tPY0ZUS3NYX2w_MQfKw> (9x4o)
-- CHAMELEON Datasets: <http://kgwisc.aei.polsl.pl/index.php/en/dataset/63-animal-camouflage-analysis>
+- COD Datasets
+- CAMO Datasets
+- NC4K Datasets
+- CHAMELEON Datasets
 
 
 
