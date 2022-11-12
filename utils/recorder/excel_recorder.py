@@ -9,9 +9,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
 
-# Thanks:
-# - Python_Openpyxl: https://www.cnblogs.com/programmer-tlh/p/10461353.html
-# - Python之re模块: https://www.cnblogs.com/shenjianping/p/11647473.html
+
 
 
 def create_xlsx(xlsx_path: str):
@@ -40,16 +38,7 @@ def append_row(sheet: Worksheet, row_data):
 
 
 def insert_row(sheet: Worksheet, row_data, row_id, min_col=1, interval=0):
-    """
-    将数据插入工作表中的一行
-
-    Args:
-        sheet: 工作表对象
-        row_data: 要插入的数据，tuple或者list
-        row_id: 要插入区域的行的序号（从1开始）
-        min_col: 要插入区域的起始列的序号（从1开始）
-        interval: row_data中各个数据之间要间隔多少个空的cell
-    """
+   
     assert isinstance(row_id, int) and isinstance(min_col, int) and row_id > 0 and min_col > 0
     assert isinstance(row_data, (tuple, list)), row_data
 
@@ -77,9 +66,7 @@ def merge_region(sheet: Worksheet, min_row, max_row, min_col, max_col):
 
 
 def get_col_id_with_row_id(sheet: Worksheet, col_name: str, row_id):
-    """
-    从指定行中寻找特定的列名，并返回对应的列序号
-    """
+   
     assert isinstance(row_id, int) and row_id > 0
 
     for cell in sheet[row_id]:
@@ -89,9 +76,7 @@ def get_col_id_with_row_id(sheet: Worksheet, col_name: str, row_id):
 
 
 def get_row_id_with_col_name(sheet: Worksheet, row_name: str, col_name: str):
-    """
-    从指定列名字的一列中寻找指定行，返回对应的row_id, col_id, is_new_row
-    """
+    
     is_new_row = True
     col_id = get_col_id_with_row_id(sheet=sheet, col_name=col_name, row_id=1)
 
@@ -104,9 +89,7 @@ def get_row_id_with_col_name(sheet: Worksheet, row_name: str, col_name: str):
 
 
 def get_row_id_with_col_id(sheet: Worksheet, row_name: str, col_id: int):
-    """
-    从指定序号的一列中寻找指定行
-    """
+    
     assert isinstance(col_id, int) and col_id > 0
 
     is_new_row = True
@@ -143,16 +126,7 @@ class MetricExcelRecorder(object):
             dataset_names=None,
             metric_names=None,
     ):
-        """
-        Args:
-            xlsx_path: 保存工作表的xlsx文件地址
-            sheet_name: 存放数据的工作表名字
-            row_header: 最左上角的数据，在这个类中，指代存放于合并后的A1:A2区域的文本
-            repalce_config: 用来格式化数据集名字和指标名字的设定，这里借助re.sub函数进行处理，
-                默认设置：`dict(lower=True, replace=(r"[_-]", ""))`
-            dataset_names: 数据集合名字列表
-            metric_names: 指标名字列表
-        """
+       
         create_xlsx(xlsx_path=xlsx_path)
 
         if repalce_config is None:
@@ -184,13 +158,13 @@ class MetricExcelRecorder(object):
         |...
         """
         with open_excel(xlsx_path=self.xlsx_path, sheet_name=self.sheet_name) as sheet:
-            # 插入row_header
+            
             insert_cell(sheet=sheet, row_id=1, col_id=1, value=self.row_header)
-            # 合并row_header的单元格
+       
             merge_region(sheet=sheet, min_row=1, max_row=2, min_col=1, max_col=1)
-            # 插入数据集信息
+            
             insert_row(sheet=sheet, row_data=self.dataset_names, row_id=1, min_col=2, interval=self.num_metrics - 1)
-            # 插入指标信息
+          
             for i in range(self.num_datasets):
                 insert_row(sheet=sheet, row_data=self.metric_names, row_id=2, min_col=2 + i * self.num_metrics)
 
@@ -202,17 +176,17 @@ class MetricExcelRecorder(object):
         dataset_name = format_string_with_config(dataset_name, self.repalce_config)
         assert dataset_name in self.dataset_names, f"{dataset_name} is not contained in {self.dataset_names}"
 
-        # 1 载入数据表更新后写入新表
+        
         with open_excel(xlsx_path=self.xlsx_path, sheet_name=self.sheet_name) as sheet:
-            # 2 搜索method_name是否存在，如果存在则直接寻找对应的行列坐标，如果不存在则直接使用新行
+          
             dataset_col_start_id = get_col_id_with_row_id(sheet=sheet, col_name=dataset_name, row_id=1)
             (method_row_id, method_col_id), is_new_row = get_row_id_with_col_name(
                 sheet=sheet, row_name=method_name, col_name="methods"
             )
-            # 3 插入方法名字到对应的位置
+           
             if is_new_row:
                 sheet.cell(row=method_row_id, column=method_col_id, value=method_name)
-            # 4 格式化指标数据部分为合理的格式，并插入表中
+           
             row_data = self._format_row_data(row_data=row_data)
             insert_row(sheet=sheet, row_data=row_data, row_id=method_row_id, min_col=dataset_col_start_id)
 
@@ -262,21 +236,21 @@ class NewMetricExcelRecorder(object):
         |...
         """
         with open_excel(xlsx_path=self.xlsx_path, sheet_name=self.sheet_name) as sheet:
-            # 插入row_headers
+          
             insert_cell(sheet=sheet, row_id=1, col_id=1, value=self.row_header)
-            # 合并row_header的单元格
+       
             merge_region(sheet=sheet, min_row=1, max_row=3, min_col=1, max_col=1)
 
             if self.record_average:
-                # 根据需要插入平均指标区域
+     
                 self.dataset_names.append("average")
                 self.dataset_lengths.append(sum(self.dataset_lengths))
                 self.num_datasets += 1
 
-            # 在第一行插入数据集名字和数据量
+      
             insert_row(sheet=sheet, row_data=self.dataset_names, row_id=1, min_col=2, interval=self.num_metrics - 1)
             insert_row(sheet=sheet, row_data=self.dataset_lengths, row_id=1, min_col=3, interval=self.num_metrics - 1)
-            # 在第二行插入指标信息
+          
             for i in range(len(self.dataset_names)):
                 insert_row(sheet=sheet, row_data=self.metric_names, row_id=2, min_col=2 + i * self.num_metrics)
 
@@ -289,16 +263,16 @@ class NewMetricExcelRecorder(object):
 
         dataset_name = format_string_with_config(dataset_name, self.repalce_config)
 
-        # 1 载入数据表，改写后存入新表
+
         with open_excel(xlsx_path=self.xlsx_path, sheet_name=self.sheet_name) as sheet:
-            # 2 搜索method_name是否存在，如果存在则直接寻找对应的行列坐标，如果不存在则直接使用新行
+       
             dataset_col_start_id = get_col_id_with_row_id(sheet=sheet, col_name=dataset_name, row_id=1)
             (method_row_id, method_col_id), is_new_row = get_row_id_with_col_name(
                 sheet=sheet, row_name=method_name, col_name=self.row_header
             )
-            # 3 插入方法名字到对应的位置
+         
             if is_new_row:
                 insert_cell(sheet=sheet, row_id=method_row_id, col_id=method_col_id, value=method_name)
-            # 4 格式化指标数据部分为合理的格式，并插入表中
+          
             row_data = self._format_row_data(row_data=row_data)
             insert_row(sheet=sheet, row_data=row_data, row_id=method_row_id, min_col=dataset_col_start_id)
