@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2020/12/19
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
+
 
 import copy
 import math
@@ -107,16 +105,6 @@ def get_poly_coef_func(num_iters, lr_decay, min_coef, max_coef=1):
         return poly_anneal(low_bound=min_coef, up_bound=max_coef, percentage=curr_idx / num_iters, lr_decay=lr_decay)
 
     return get_poly_coef
-
-# def adjust_learning_rate(num_iters):
-#     """Decay the learning rate with half-cycle cosine after warmup"""
-#     if epoch < args.warmup_epochs:
-#         lr = args.lr * epoch / args.warmup_epochs 
-#     else:
-#         lr = args.min_lr + (args.lr - args.min_lr) * 0.5 * \
-#             (1. + math.cos(math.pi * (epoch - args.warmup_epochs) / (args.epochs - args.warmup_epochs)))
-
-# coefficient entry function ----------------------------------------------------------------------
 
 
 def get_scheduler_coef_func(mode, num_iters, cfg):
