@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2020
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
-from numbers import Number
 
+from numbers import Number
 import torch
 import torch.nn.functional as F
 
@@ -16,14 +13,7 @@ def cus_sample(
     interpolation="bilinear",
     align_corners=False,
 ) -> torch.Tensor:
-    """
-    :param feat: 输入特征
-    :param mode: size/scale
-    :param factors: shape list for mode=size or scale list for mode=scale
-    :param interpolation:
-    :param align_corners: 具体差异可见https://www.yuque.com/lart/idh721/ugwn46
-    :return: the resized tensor
-    """
+   
     if mode is None:
         return feat
     else:
@@ -78,14 +68,7 @@ def cus_sample(
 
 
 def upsample_add(*xs: torch.Tensor, interpolation="bilinear", align_corners=False) -> torch.Tensor:
-    """
-    resize xs[:-1] to the size of xs[-1] and add them together.
-
-    Args:
-        xs:
-        interpolation: config for cus_sample
-        align_corners: config for cus_sample
-    """
+  
     y = xs[-1]
     for x in xs[:-1]:
         y = y + cus_sample(
@@ -95,14 +78,7 @@ def upsample_add(*xs: torch.Tensor, interpolation="bilinear", align_corners=Fals
 
 
 def upsample_cat(*xs: torch.Tensor, interpolation="bilinear", align_corners=False) -> torch.Tensor:
-    """
-    resize xs[:-1] to the size of xs[-1] and concat them together.
-
-    Args:
-        xs:
-        interpolation: config for cus_sample
-        align_corners: config for cus_sample
-    """
+    
     y = xs[-1]
     out = []
     for x in xs[:-1]:
@@ -113,9 +89,7 @@ def upsample_cat(*xs: torch.Tensor, interpolation="bilinear", align_corners=Fals
 
 
 def upsample_reduce(b, a, interpolation="bilinear", align_corners=False) -> torch.Tensor:
-    """
-    上采样所有特征到最后一个特征的尺度以及前一个特征的通道数
-    """
+    
     _, C, _, _ = b.size()
     N, _, H, W = a.size()
 
@@ -125,11 +99,7 @@ def upsample_reduce(b, a, interpolation="bilinear", align_corners=False) -> torc
 
 
 def shuffle_channels(x, groups):
-    """
-    Channel shuffle: [N,C,H,W] -> [N,g,C/g,H,W] -> [N,C/g,g,H,W] -> [N,C,H,W]
-    一共C个channel要分成g组混合的channel，先把C reshape成(g, C/g)的形状，
-    然后转置成(C/g, g)最后平坦成C组channel
-    """
+   
     N, C, H, W = x.size()
     x = x.reshape(N, groups, C // groups, H, W).permute(0, 2, 1, 3, 4)
     return x.reshape(N, C, H, W)
