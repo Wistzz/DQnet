@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time    : 2021/5/22
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
-
 import importlib
 import sys
 from typing import Any, Dict, Iterable, Iterator, Tuple
