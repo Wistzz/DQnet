@@ -1,6 +1,5 @@
 # DQnet: Cross-Model Detail Querying for Camouflaged Object Detection
-This is the official implementaion of paper [***DQnet: Cross-Model Detail Querying for Camouflaged Object Detection***](), which is accepted as ***CVPR 2023*** poster.
-
+This is the official implementaion of paper [***DQnet: Cross-Model Detail Querying for Camouflaged Object Detection***]().
 
 ## Illustration
 
