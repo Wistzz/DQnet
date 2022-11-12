@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2021/6/1
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
+
 
 import ast
 import os.path as osp
@@ -351,35 +349,7 @@ class Configurator:
             raise NotImplementedError
 
     def merge_from_dict(self, options, allow_list_keys=True):
-        """Merge list into cfg_dict.
 
-        Merge the dict parsed by MultipleKVAction into this cfg.
-
-        Examples:
-            >>> options = {'model.backbone.depth': 50,
-            ...            'model.backbone.with_cp':True}
-            >>> cfg = Configurator(dict(model=dict(backbone=dict(type='ResNet'))))
-            >>> cfg.merge_from_dict(options)
-            >>> cfg_dict = super(Configurator, self).__getattribute__('_cfg_dict')
-            >>> assert cfg_dict == dict(
-            ...     model=dict(backbone=dict(depth=50, with_cp=True)))
-
-            # Merge list element
-            >>> cfg = Configurator(dict(pipeline=[
-            ...     dict(type='LoadImage'), dict(type='LoadAnnotations')]))
-            >>> options = dict(pipeline={'0': dict(type='SelfLoadImage')})
-            >>> cfg.merge_from_dict(options, allow_list_keys=True)
-            >>> cfg_dict = super(Configurator, self).__getattribute__('_cfg_dict')
-            >>> assert cfg_dict == dict(pipeline=[
-            ...     dict(type='SelfLoadImage'), dict(type='LoadAnnotations')])
-
-        Args:
-            options (dict): dict of configs to merge from.
-            allow_list_keys (bool): If True, int string keys (e.g. '0', '1')
-              are allowed in ``options`` and will replace the element of the
-              corresponding index in the config if the config is a list.
-              Default: True.
-        """
         option_cfg_dict = {}
         for full_key, v in options.items():
             d = option_cfg_dict
