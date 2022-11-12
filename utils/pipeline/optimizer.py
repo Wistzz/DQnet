@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2020/12/19
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
 from tokenize import group
 import types
 
@@ -59,9 +56,7 @@ def group_params(model, group_mode, initial_lr, optim_cfg):
         ]
     elif group_mode == "r3":
         params = [
-            # 不对bias参数执行weight decay操作，weight decay主要的作用就是通过对网络
-            # 层的参数（包括weight和bias）做约束（L2正则化会使得网络层的参数更加平滑）达
-            # 到减少模型过拟合的效果。
+           
             {
                 "params": [param for name, param in model.named_parameters() if name[-4:] == "bias"],
                 "lr": 2 * initial_lr,
