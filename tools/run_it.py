@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2021/3/6
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
+
 
 import argparse
 import os.path
@@ -87,10 +85,6 @@ class MyProcess:
 
     def create_and_start_proc(self, cmd=None):
         if (used_mem := self.get_used_mem(return_ratio=True)) > self.max_used_ratio:
-            # TODO: 当前的判定方式并不是太准确。最好的方式是由程序提供设置周期数的选项(`--num-epochs`)，
-            #   首先按照num_epoch=1来进行初步的运行，并统计各个命令对应使用的显存。
-            #   之后根据这些程序实际使用的显存来安排后续的操作。
-            #   这可能需要程序对输出可以实现覆盖式(`--overwrite`)操作。
             self.status = STATUS.GPU_BUSY
             print(
                 f"[ID {self.slot_idx} WARN] the memory usage of the GPU {self.gpu_id} is currently {used_mem}, "
@@ -103,7 +97,6 @@ class MyProcess:
         self.proc = Process(target=self._create_sub_proc, kwargs=dict(cmd=cmd))
         self.proc.start()
 
-        # 只有成功创建并启动了进城后才改变状态
         self.status = STATUS.NORMAL
 
     def is_alive(self):
@@ -155,7 +148,7 @@ def main():
 
     print("[CREATE PROCESS OBJECTS]")
     proc_slots = []
-    for i in range(min(args.max_workers, len(cmd_pool))):  # 确保slots数量小于等于命令数量
+    for i in range(min(args.max_workers, len(cmd_pool))):  
         gpu_id = i % num_gpus
         proc = MyProcess(
             interpreter_path=args.interpreter,
@@ -169,14 +162,14 @@ def main():
         print(proc)
         proc_slots.append(proc)
 
-    cmd_pool.reverse()  # 后面的操作是按照栈的形式处理的，所以这里翻转一下
+    cmd_pool.reverse() 
     for p in proc_slots:
-        if len(cmd_pool) == 0:  # 确保出栈不会异常
+        if len(cmd_pool) == 0:  
             break
-        cmd = cmd_pool.pop()  # 指令出栈
+        cmd = cmd_pool.pop()  
         p.create_and_start_proc(cmd=cmd)
-        if p.status == STATUS.GPU_BUSY:  # 当前GPU显存不足，暂先跳过
-            cmd_pool.append(cmd)  # 指令未能顺利执行，重新入栈
+        if p.status == STATUS.GPU_BUSY:  
+            cmd_pool.append(cmd) 
             continue
 
     is_normal_ending = True
@@ -184,19 +177,19 @@ def main():
         # the pool of the processes is not empty
         for slot_idx, p in enumerate(proc_slots):  # polling
             if not p.is_alive():
-                if len(cmd_pool) == 0:  # 指令均在执行或者已被执行
+                if len(cmd_pool) == 0: 
                     del proc_slots[slot_idx]
                     print("[NO MORE COMMANDS, DELETE THE PROCESS SLOT!]")
                     break
 
                 cmd = cmd_pool.pop()
                 p.create_and_start_proc(cmd=cmd)
-                if p.status == STATUS.GPU_BUSY:  # 当前GPU显存不足，暂先跳过
-                    cmd_pool.append(cmd)  # 指令未能顺利执行，重新入栈
+                if p.status == STATUS.GPU_BUSY:  
+                    cmd_pool.append(cmd)  
                     continue
 
         if proc_slots and all([_p.status == STATUS.GPU_BUSY for _p in proc_slots]):
-            # 所有GPU都被外部程序占用，直接退出。因为如果我们的程序正常执行时，状态是NORMAL
+            
             if args.poll_interval > 0:
                 print(f"[ALL GPUS ARE BUSY, WAITING {args.poll_interval} SECONDS!]")
                 time.sleep(args.poll_interval)
