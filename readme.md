@@ -39,9 +39,9 @@ More details can be found in <./requirements.txt>
 
 ### Datasets
 More details can be found at:
-- COD Datasets: <https://github.com/lartpang/awesome-segmentation-saliency-dataset#camouflaged-object-detection-cod>
+- COD Datasets: <https://pan.baidu.com/s/19fYel3STGb5lg27xbQriOA> (gqrg)
 - CAMO Datasets: <https://sites.google.com/view/ltnghia/research/camo>
-- NC4K Datasets: <https://pan.baidu.com/s/1Mq-tPY0ZUS3NYX2w_MQfKw>(9x4o)
+- NC4K Datasets: <https://pan.baidu.com/s/1Mq-tPY0ZUS3NYX2w_MQfKw> (9x4o)
 - CHAMELEON Datasets: <http://kgwisc.aei.polsl.pl/index.php/en/dataset/63-animal-camouflage-analysis>
 
 
