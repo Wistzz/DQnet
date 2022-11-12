@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2020/12/19
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
 
 import os
-
 import torch
 from torch import nn
 
@@ -22,17 +18,7 @@ def save_params(
     save_num_models=1,
     scaler=None,
 ):
-    """
-    ::
 
-        if isinstance(model, dict):
-            model_state = model
-        else:
-            model_state = model.module.state_dict() if hasattr(model, "module") else model.state_dict()
-        opti_state = (optimizer if isinstance(optimizer, dict) else optimizer.state_dict()) if optimizer else None
-        sche_state = (scheduler if isinstance(scheduler, dict) else scheduler.state_dict()) if scheduler else None
-        scaler_state = (scaler if isinstance(scaler, dict) else scaler.state_dict()) if scaler else None
-    """
 
     if isinstance(model, dict):
         model_state = model
@@ -80,13 +66,7 @@ def save_weight(save_path, model):
 
 
 def load_specific_params(load_path, names):
-    """
-    从保存节点恢复参数
-
-    Args:
-        load_path (str): 模型存放路径
-        names (list): 需要载入的参数名字 [model, optimizer, scheduler, scaler, start_epoch]
-    """
+   
     _name_mapping = dict(
         model="net_state",
         optimizer="opti_state",
@@ -113,13 +93,7 @@ def load_specific_params(load_path, names):
 
 
 def load_weight(load_path, model: nn.Module):
-    """
-    从保存节点恢复模型
-
-    Args:
-        load_path (str): 模型存放路径
-        model: your model
-    """
+    
     assert os.path.exists(load_path), load_path
 
     print(f"Loading weight '{load_path}'")
