@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2020
-# @Author  : Lart Pang
-# @GitHub  : https://github.com/lartpang
+
 
 import torch.nn as nn
 from timm.models.layers import to_2tuple
@@ -84,22 +82,7 @@ class ConvGNReLU(nn.Sequential):
         act_name="relu",
         inplace=True,
     ):
-        """
-        执行流程Conv2d => GroupNormalization [=> Activation]
 
-        Args:
-            in_planes: 模块输入通道数
-            out_planes: 模块输出通道数
-            kernel_size: 内部卷积操作的卷积核大小
-            stride: 卷积步长
-            padding: 卷积padding
-            dilation: 卷积的扩张率
-            groups: 卷积分组数，需满足pytorch自身要求
-            gn_groups: GroupNormalization的分组数，默认为4
-            bias: 是否启用卷积的偏置，默认为False
-            act_name: 使用的激活函数，默认为relu，设置为None的时候则不使用激活函数
-            inplace: 设置激活函数的inplace参数
-        """
         super(ConvGNReLU, self).__init__()
 
         self.add_module(
