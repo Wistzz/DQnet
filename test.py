@@ -14,7 +14,7 @@ from utils import builder, configurator, io, misc, ops, pipeline, recorder
 
 def parse_config():
     parser = argparse.ArgumentParser("Training and evaluation script")
-    parser.add_argument("--config", default="./configs/zoomnet/zoomnet.py", type=str)
+    parser.add_argument("--config", default="", type=str)
     parser.add_argument("--datasets-info", default="./configs/_base_/dataset/dataset_configs.json", type=str)
     parser.add_argument("--model-name", type=str)
     parser.add_argument("--batch-size", type=int)
@@ -99,7 +99,7 @@ def test_once(
             if to_minmax:
                 pred = ops.minmax(pred)
 
-            if save_path:  # 这里的save_path包含了数据集名字
+            if save_path:  
                 ops.save_array_as_image(data_array=pred, save_name=os.path.basename(mask_path), save_dir=save_path)
 
             pred = (pred * 255).astype(np.uint8)
